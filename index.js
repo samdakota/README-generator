@@ -1,21 +1,20 @@
-// TODO: Include packages needed for this application
+const fs = require('fs');
 const inquirer = require('inquirer');
+const generateMarkdown = require('./develop/utils/generateMarkdowns');
 
-
-// TODO: Create an array of questions for user input
 const questions = [
     {
         type: "input",
-        name: "projectTitle",
+        name: "title",
         message: "What is the title of your project?",
-        validate: (projectTitleInput) => {
-            (projectTitleInput) ? true : console.log('Please enter a project title')
-        }
+        // validate: (projectTitleInput) => {
+        //     (projectTitleInput) ? true : console.log('Please enter a project title')
+        // }
     },
     {
         type: "input",
         name: "description",
-        message: "Write a description of the project here:",
+        message: "Provide a description of the project:",
     },
     {
         type: "input",
@@ -43,13 +42,9 @@ const questions = [
         message: "What is the license for your application?",
         choices: [
             "MIT",
-            "GNU AGPLv3",
-            "GNU GPLv3",
-            "GNU LGPLv3",
-            "Mozilla Public License 2.0",
-            "Apache License 2.0",
-            "Boost Software License",
-            "The Unilicense"
+            "GNU",
+            "Apache",
+            // "None"
         ]
     },
     {
@@ -59,17 +54,30 @@ const questions = [
     },
     {
         type: "input",
-        name: "emailAdress",
+        name: "emailAddress",
         message: "What is your email address?",
     },
 ];
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, generateMarkdown(data), err =>
+        err ? console.log(err) : console.log('README file created!')
+        );
+};
 
 // TODO: Create a function to initialize app
-function init() {}
+function init() {
+    inquirer
+        .prompt(questions)
+        .then((answers) => {
+            console.log(answers)
+           writeToFile('README.md', answers)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    };
 
 // Function call to initialize app
-init();
-
+init()
